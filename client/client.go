@@ -1010,3 +1010,36 @@ func (cl client) GetSinglePR(org, repo string, number int) (*sdk.PullRequest, er
 
 	return p, nil
 }
+
+func (cl *client) GetBot() (string, error) {
+	u, _, err := cl.c.Users.Get(context.Background(), "")
+	if err != nil {
+		return "", err
+	}
+
+	return u.GetLogin(), err
+}
+
+func (cl *client) ListOrg() ([]string, error) {
+	var r []string
+
+	opt := sdk.ListOptions{PerPage: 99, Page: 1}
+	for {
+		ls, _, err := cl.c.Organizations.List(context.Background(), "", &opt)
+		if err != nil {
+			return nil, err
+		}
+
+		if len(ls) == 0 {
+			break
+		}
+
+		for _, v := range ls {
+			r = append(r, v.GetLogin())
+		}
+
+		opt.Page += 1
+	}
+
+	return r, nil
+}

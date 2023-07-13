@@ -70,4 +70,6 @@ type Client interface {
 	ListOperationLogs(pr PRInfo) ([]*sdk.Timeline, error)
 	GetEnterprisesMember(org string) ([]*sdk.User, error)
 	GetSinglePR(org, repo string, number int) (*sdk.PullRequest, error)
+	GetBot() (string, error)
+	ListOrg() ([]string, error)
 }
